@@ -1,0 +1,41 @@
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def findDuplicateSubtrees(root):
+    def postorder(root, subtrees, duplicates):
+        if not root:
+            return ""
+
+        left = postorder(root.left, subtrees, duplicates)
+        right = postorder(root.right, subtrees, duplicates)
+        
+        serialized = str(root.val) + left + right
+        
+        if serialized in subtrees:
+            if serialized not in duplicates:
+                duplicates.add(serialized)
+        else:
+            subtrees.add(serialized)
+        
+        return serialized
+
+    subtrees = set()
+    duplicates = set()
+    postorder(root, subtrees, duplicates)
+    
+    return 1 if len(duplicates) > 0 else 0
+
+# Example usage
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.left.left = TreeNode(4)
+root.left.right = TreeNode(5)
+root.right.right = TreeNode(2)
+root.right.right.left = TreeNode(4)
+root.right.right.right = TreeNode(5)
+result = findDuplicateSubtrees(root)
+print(result)
